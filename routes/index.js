@@ -17,7 +17,10 @@ var mainmodel = require("../database/mainmodel.js");
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-    res.render('index',{ title: 'test'});
+	mainmodel.find({},function(data){
+		console.log(data);
+		res.render('index',{ listData: data});
+	});
 });
 
 /* 管理员登录页 */
@@ -52,7 +55,8 @@ router.route("/entering").post(function(req,res){
 	var addData={
 		emtName:req.body.emtName,
 	    emtRoot: req.body.emtRoot,
-	    emtCount: req.body.emtCount
+	    emtCount: req.body.emtCount,
+	    imgType: req.body.imgType
 	}
 	mainmodel.addone(addData,function(data){
 		//console.log(data);

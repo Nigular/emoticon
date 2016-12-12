@@ -16,11 +16,12 @@ var emtSchema = new mongoose.Schema({
     emtName   : {type : String},	//名字
     emtRoot  : {type : String},	//根目录
     emtCount  : {type : String},	//表情包数量
+    imgType : {type:String},	//表情图片类型
     insertTime : {type : String, default: Date.now}	//插入时间
 });
 
 
-//将该Schema发布为Model,创建collection连接user表
+//将该Schema发布为Model,创建collection连接main表
 var MainModel = db.model('main',emtSchema);
 
 // 插入一条数据
@@ -34,5 +35,18 @@ exports.addone = function(option,callback) {
         }
     });
 }
+
+// 查找条件列表
+exports.find = function(option,callback) {
+    MainModel.find(option,function (err, docs) {
+		if (err){
+			return console.error(err);
+		}else{
+			//console.log(docs);
+            callback(docs);
+        }
+	});
+}
+
 
 exports.mainmodel = MainModel;// 作为一个模块被引用，要用exports把变量暴露出去

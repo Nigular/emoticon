@@ -6,15 +6,20 @@
     <link rel="stylesheet" type="text/css" href="/css/reset.css"/>
     <title>首页</title>
     <style type="text/css">
-    	img{width: 150px;height: 150px;}
+    	img{width: 150px;height: 150px;margin: 20px;}
     </style>
 </head>
 <body>
     <h1>index</h1>
-    <%= title %>
-    <img src="/img/holder.png"/>
-    <img src="/img/holder.png"/>
-    <img src="/img/holder.png"/>
+    <% for(var item in listData){ %>
+    <% var rootUrl=listData[item].emtRoot;
+    	var type=listData[item].imgType;
+    	for(var i=0;i<listData[item].emtCount;i++){	
+    		if(i<10) i="0"+i;
+     %>
+    	<img src="<%= rootUrl+i+"."+type %>"/>
+    <% } %>
+    <% } %>
     <img src="/img/holder.png"/>
 </body>
 </html>
