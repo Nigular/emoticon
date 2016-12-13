@@ -2,24 +2,166 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <link rel="stylesheet" type="text/css" href="/css/reset.css"/>
     <title>首页</title>
-    <style type="text/css">
-    	img{width: 150px;height: 150px;margin: 20px;}
-    </style>
+    <link rel="stylesheet" type="text/css" href="/css/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/font.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/index.css"/>
+    <script src="/js/jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/js/jquery.lazyload.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/js/jquery.goup.min.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
-    <h1>index</h1>
-    <% for(var item in listData){ %>
-    <% var rootUrl=listData[item].emtRoot;
-    	var type=listData[item].imgType;
-    	for(var i=0;i<listData[item].emtCount;i++){	
-    		if(i<10) i="0"+i;
-     %>
-    	<img src="<%= rootUrl+i+"."+type %>"/>
-    <% } %>
-    <% } %>
-    <img src="/img/holder.png"/>
+	<div id="large-header" class="large-header">
+		<canvas id="demo-canvas"></canvas>
+	</div>
+	
+	<div class="main">
+	    <% for(var item in listData){ %>
+	    	<div class="emtlist">
+	    	<h2 class="listTit"><%= listData[item].emtName %></h2>
+		    <% var rootUrl=listData[item].emtRoot;
+		    	var type=listData[item].imgType;
+		    	for(var i=0;i<listData[item].emtCount;i++){	
+		    		if(i<10) i="0"+i;
+		     %>
+		     <li class="imgbox">
+		     	<img class="lazy" data-original="<%= rootUrl+i+"."+type %>" src="/img/holder.png"/>
+		     	<div class="img-cover">
+		     		<span class="icon-gouwuche iconfont addToCar"></span>
+		     		<span class="icon-download iconfont downLoadOne"></span>
+		     	</div>
+		     </li>
+		    <% } %>
+		    </div>
+	    <% } %>
+    </div>
+    
+    <!--购物车按钮-->
+    <div class="block-sidebar" id="show-menu">
+    	<span class="car-count" id="car-count">0</span>
+    	<span class="icon-gouwuche iconfont icon-car"></span>
+    </div>
+    
+    <!--右侧展开栏-->
+    <div class="right-sidebar">
+    	<div class="header">
+    		<div class="clear">
+    			<span class="icon-unie iconfont"></span>一键清除
+    		</div>
+    	</div>
+    	<div class="comfList" id="comfList">
+    		<li>
+    			<img src="/img/holder.png"/>
+    		</li>
+    	</div>
+    	
+    	<div class="downAllBtn">一键下载</div>
+    </div>
+    
+    <!--覆盖遮罩层-->
+    <div class="cover-layer"></div>
+    <script id="comfList-tmp" type="text/html">
+	    {{each list as value i}}
+	        <li>
+    			<img src="{{value}}"/>
+    		</li>
+	    {{/each}}
+	</script>
+    
 </body>
 </html>
+<script src="/js/rAF.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/aniBg.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/template.js" type="text/javascript" charset="utf-8"></script>
+
+<script type="text/javascript" charset="utf-8">
+/**全局变量**/
+var seltImgData=new Array();
+
+/**
+ * 用iframe下载
+ * @params url 下载地址
+ */
+function downloadByIframe(url){
+    var iframe = document.getElementById("myIframe");
+    if(iframe){
+        iframe.src = url;
+    }else{
+        iframe = document.createElement("iframe");
+        iframe.style.display = "none";
+        iframe.src = url;
+        iframe.id = "myIframe";
+        document.body.appendChild(iframe);
+    }
+}
+
+
+$(function() {
+  	//图片懒加载
+	//$("img.lazy").lazyload({effect: "fadeIn"});
+	  
+	//回到顶部
+	$.goup({
+	    trigger: 100,
+	    bottomOffset: 150,
+	    locationOffset: 100,
+	    title: 'Top',
+	    titleAsText: true
+	});
+	
+	//把表情加入购物车
+	$(".addToCar").on("click",function(){
+		var papa = $(this).parents(".imgbox");
+		var seltUrl = papa.find(".lazy").data("original");
+		if(papa.hasClass("selected")){
+			papa.removeClass("selected");
+			seltImgData.splice($.inArray(seltUrl,seltImgData),1); 
+			$("#car-count").text(parseInt($("#car-count").text())-1);
+		}else{
+			papa.addClass("selected");
+			seltImgData.push(seltUrl);
+			$("#car-count").text(parseInt($("#car-count").text())+1);
+		}
+		console.log(seltImgData);
+	});
+	
+	// 下载单个表情
+	$(".downLoadOne").on("click",function(){
+		var papa = $(this).parents(".imgbox");
+		var seltUrl = papa.find(".lazy").data("original");
+		var arr=[];
+		arr.push(seltUrl);
+		var str = arr.join("-");
+		$.post('/download',{fileArray:str},function(data){
+            if(data.code == "s_ok"){
+                downloadByIframe(data.url);
+            }else{
+                alert("系统繁忙");
+            }
+		});
+	});
+	
+	//开启与关闭右侧栏
+	$("#show-menu").on("click",function(){
+		$(".cover-layer").fadeIn(150);
+		$(".right-sidebar").addClass("show");
+		$("body").css("overflow-y","hidden");
+		addList();
+	});
+	$(".cover-layer").on("click",function(){
+		$(".cover-layer").fadeOut(150);
+		$(".right-sidebar").removeClass("show");
+		$("body").css("overflow-y","auto");
+	});
+	
+	/**把选中的表情展示出来**/
+	function addList(){
+		console.log("word");
+		var item = template('comfList-tmp', {list:seltImgData});
+		$("#comfList").html(item);
+	}
+    
+});
+</script>

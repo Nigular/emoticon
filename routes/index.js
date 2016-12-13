@@ -4,7 +4,7 @@ var _ = require('lodash');
 var fs = require('fs');
 var archiver = require('archiver');
 var multer = require('multer');
-
+var request = require("request");
 var fs_ext = require('../utils/fs_ext')();
 var router = express.Router();
 
@@ -71,6 +71,45 @@ function authentication(req, res) {
     }
 }
 
+router.get("/downloadOne",function(req,res,next){
+	var filepath = req.query.path,
+		fReadStream;
+	var rootFile = "uploads/";	
+	res.set({
+        "Content-type":"application/octet-stream",
+        "Content-Disposition":"attachment;filename="+encodeURI("1.gif")
+    });
+    //console.log(rootFile+filepath+"/"+fileName);
+	fReadStream = fs.createReadStream(rootFile+filepath);
+    fReadStream.on("data",(chunk) => res.write(chunk,"binary"));
+    fReadStream.on("end",function () {
+        res.end();
+    });
+});
+
+//获取下载文件的地址
+router.post('/download',function(req, res){
+	var fileArray = req.body.fileArray;
+    
+    // 重组数组
+    var newArray=fileArray.split("-");
+    console.log(newArray[0]);
+    if(fileArray.length == 0){
+        res.send({"code":"fail", "summary":"no files"});
+        return;
+    }
+    
+    //只有一个文件的时候直接走get
+    if(newArray.length==1){
+    	var a = newArray[0].split("/");
+    	var b = a[a.length-1];
+    	var c = a[a.length-2];
+    	var downloadUrl = "/downloadOne?path="+encodeURIComponent(c+"/"+b);
+    	res.send({"code":"s_ok", "url":downloadUrl});
+    }
+	
+});
+
 //下载单个文件
 router.get('/downloadSingle',function(req, res, next){
     var currDir = path.normalize(req.query.dir),
@@ -103,7 +142,7 @@ router.get('/downloadSingle',function(req, res, next){
 });
 
 //获取下载文件的地址
-router.post('/download',function(req, res){
+router.post('/godownload',function(req, res){
     var currDir = path.normalize(req.body.dir),
     	fileArray = req.body.fileArray,
         filesCount = 0,     //非文件夹文件个数

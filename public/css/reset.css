@@ -25,3 +25,12 @@ a:active {
 html{
 	font-family: "微软雅黑",sans-serif;
 }
+
+/** 回到顶部样式重置 **/
+.goup-text,.goup-container{
+	z-index: 10;opacity: 0.9;
+	-webkit-opacity: 0.9;
+}
+.goup-text{
+	color: #FFFFFF;
+}

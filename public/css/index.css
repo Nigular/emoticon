@@ -1,0 +1,194 @@
+
+.main{
+	width: 1200px;margin: 0 auto;
+	position: relative;z-index: 1;
+}
+
+.imgbox{
+	width: 120px;height: 120px;display:table-cell;
+	text-align:center;float: left;
+	vertical-align:middle;margin: 15px;
+	position: relative;cursor: pointer;
+	box-sizing: border-box;overflow: hidden;
+}
+.imgbox.selected{
+	border-radius: 5px;border: 1px dashed #60606d;
+}
+.imgbox.selected .icon-gouwuche:before{
+	color: #FF6600!important;
+}
+
+.imgbox img{
+	max-height: 100%;max-width: 100%;
+}
+
+.imgbox:hover .img-cover{
+	display: block;
+}
+
+.img-cover{
+	position: absolute;
+	left: 0;bottom: 0;width: 100%;border-radius: 5px;
+	height: 40px;background: rgba(13,10,49,.9);
+	color: #FFFFFF;display: none;
+}
+.img-cover .iconfont{
+	font-size: 24px;line-height: 40px;
+	display: inline-block;width: 40%;height: 40px;
+	cursor: pointer;
+}
+.img-cover .iconfont:hover{
+	color: #FF6600;background-color: #0d0a31;
+}
+
+.listTit{
+	clear: both;margin: 30px 0;padding-left: 30px;
+}
+.large-header {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;left: 0;
+	z-index: 0;
+	background: #333;
+	overflow: hidden;
+	background-size: cover;
+	background-position: center center;
+	z-index: 1;
+	background-image: url('../img/demo-2-bg.jpg');
+	background-position: center bottom;
+}
+
+.emtlist{
+	background: #FFFFFF;overflow: hidden;
+	padding: 20px;border-radius: 5px;margin:15px 0;
+}
+
+/*我看中的*/
+.block-sidebar{
+	position: fixed;
+	right: 100px;
+	bottom: 220px;
+	width: 60px;height: 60px;
+	background: rgba(0,0,0,0.9);
+	border-radius: 50%;
+	z-index: 10;
+    cursor: pointer;
+}
+.car-count{
+	min-width: 12px;
+    text-align: center;
+    line-height: 12px;
+    display: inline-block;
+    position: absolute;
+    right: -2px;
+    top: -2px;
+    background: red;
+    color: #fff;
+    border-radius: 12px;
+    padding: 4px;
+    font-size: 12px;
+    font-family: Tahoma!important;
+}
+.icon-car{
+	color: #FFFFFF;
+    font-size: 32px;
+    display: block;
+    margin-top: 14px;
+    margin-left: 11px;
+}
+.cover-layer{
+	position: fixed;width: 100%;height: 100%;
+	top: 0;left: 0;bottom: 0;right: 0;
+	background: rgba(8,8,8,0.9);
+	z-index: 98;display: none;
+	cursor: pointer;
+}
+
+/* 右侧栏 */
+.right-sidebar{
+    display: block;
+    width: 350px;
+    height: 100%;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 999;
+    background: #f3f3f3;
+    -webkit-transform: translateX(100%);
+    -moz-transform: translateX(100%);
+    -ms-transform: translateX(100%);
+    transform: translateX(100%);
+    opacity: 1;
+    -webkit-transition: all .3s;
+    -moz-transition: all .3s;
+    transition: all .3s;
+}
+.right-sidebar.show {
+    display: block;
+    -webkit-transform: translateX(0);
+    -moz-transform: translateX(0);
+    -ms-transform: translateX(0);
+    transform: translateX(0);
+    opacity: 1;
+}
+.right-sidebar .header{
+	height: 55px;
+    background: #0a0f30;
+    position: relative;
+    z-index: 100;
+}
+.right-sidebar .header .clear{
+	position: absolute;
+    right: 30px;
+    top: 15px;
+    font-size: 14px;
+    color: rgba(255,255,255,.5);
+    cursor: pointer;
+}
+.right-sidebar .header .clear:hover{
+	color: #F3F3F3;
+}
+.right-sidebar .header .clear .iconfont{
+	font-size: 18px;vertical-align: -2px;
+	margin-right: 4px;
+}
+
+.comfList{
+	background: #FFFFFF;
+	height: 400px;
+	overflow-y: auto;
+}
+.comfList li{
+	width: 60px;height: 60px;float: left;
+	display:table-cell;
+	text-align:center;
+	vertical-align:middle;margin: 10px;
+}
+.comfList li img{
+	max-height: 100%;max-width: 100%;
+}
+.downAllBtn{
+    height: 36px;
+    line-height: 34px;
+    font-size: 14px;
+    width: 180px;
+    border: 1px solid transparent;
+    border-radius:18px;
+    color: #333;
+    background-color: #ddd;
+    text-align: center;
+    white-space: nowrap;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    box-sizing: border-box;
+    margin: 30px auto;
+}
+.downAllBtn:hover{
+	background-color: red;
+    color: #fff;
+}
