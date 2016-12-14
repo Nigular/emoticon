@@ -74,16 +74,24 @@ function authentication(req, res) {
 router.get("/downloadOne",function(req,res,next){
 	var filepath = req.query.path,
 		fReadStream;
-	var rootFile = "uploads/";	
-	res.set({
-        "Content-type":"application/octet-stream",
-        "Content-Disposition":"attachment;filename="+encodeURI("1.gif")
-    });
-    //console.log(rootFile+filepath+"/"+fileName);
-	fReadStream = fs.createReadStream(rootFile+filepath);
-    fReadStream.on("data",(chunk) => res.write(chunk,"binary"));
-    fReadStream.on("end",function () {
-        res.end();
+	var rootFile = "uploads/";
+	var a = filepath.split("/");
+	fs.exists(rootFile+filepath,function(exist) {
+        if(exist){
+            res.set({
+                "Content-type":"application/octet-stream",
+                "Content-Disposition":"attachment;filename="+encodeURI(a[1])
+            });
+            fReadStream = fs.createReadStream(rootFile+filepath);
+            fReadStream.on("data",(chunk) => res.write(chunk,"binary"));
+            fReadStream.on("end",function () {
+                res.end();
+            });
+        }else{
+            res.set("Content-type","text/html");
+            res.send("file not exist!");
+            res.end();
+        }
     });
 });
 
@@ -106,6 +114,40 @@ router.post('/download',function(req, res){
     	var c = a[a.length-2];
     	var downloadUrl = "/downloadOne?path="+encodeURIComponent(c+"/"+b);
     	res.send({"code":"s_ok", "url":downloadUrl});
+    }else{
+    	var fileArrays=[];
+    	for(var i=0;i<newArray.length;i++){
+    		var x = newArray[i].split("/");
+    		var y = x[x.length-2];
+    		var z = x[x.length-1];
+    		fileArrays.push(y+"/"+z);
+    	}
+    	console.log(fileArrays);
+    	
+    	//多个文件就压缩后再走get
+        var output = fs.createWriteStream(path.join("zip",zipName));
+        var archive = archiver.create('zip', {});
+        archive.pipe(output);   //和输出流相接
+        var currDir="uploads/";
+        //打包文件
+        archive.bulk([ 
+            {
+            	cwd:currDir,    //设置相对路径
+                src: newArray,
+                expand: currDir
+            }
+        ]);
+
+        archive.on('error', function(err){
+            res.send({"code":"failed", "summary":err});
+            throw err;
+        });
+        archive.on('end', function(a){
+            //输出下载链接
+            //var downloadUrl = "/downloadSingle?dir="+encodeURIComponent(zipDir)+"&name="+encodeURIComponent(zipName)+"&comefrom=archive";
+            //res.send({"code":"s_ok", "url":downloadUrl});
+        });
+        archive.finalize();
     }
 	
 });

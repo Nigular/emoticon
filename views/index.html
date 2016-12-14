@@ -131,7 +131,7 @@ $(function() {
 	$(".downLoadOne").on("click",function(){
 		var papa = $(this).parents(".imgbox");
 		var seltUrl = papa.find(".lazy").data("original");
-		var arr=[];
+		var arr=["http://oi2enuk22.bkt.clouddn.com/images/mgt1/00.gif"];
 		arr.push(seltUrl);
 		var str = arr.join("-");
 		$.post('/download',{fileArray:str},function(data){
