@@ -90,12 +90,12 @@
     font-size: 12px;
     font-family: Tahoma!important;
 }
-.icon-car{
-	color: #FFFFFF;
-    font-size: 32px;
+.block-sidebar .icon-car{
+	color: #b3b3b3;
+    font-size: 42px;
     display: block;
-    margin-top: 14px;
-    margin-left: 11px;
+    margin-top: 6px;
+    margin-left: 8px;
 }
 .cover-layer{
 	position: fixed;width: 100%;height: 100%;
@@ -146,6 +146,13 @@
     color: rgba(255,255,255,.5);
     cursor: pointer;
 }
+.right-sidebar .header .close{
+	color: #fff;font-size: 18px;
+	background-color: #FF0000;
+	width: 36px;height: 55px;line-height: 55px;
+	text-align: center;cursor: pointer;
+	float: left;
+}
 .right-sidebar .header .clear:hover{
 	color: #F3F3F3;
 }
@@ -191,4 +198,12 @@
 .downAllBtn:hover{
 	background-color: red;
     color: #fff;
+}
+.showcount{
+	float: left;margin-left: 12px;
+	position: relative;
+	width: 60px;height:55px;
+}
+.showcount .icon-gouwuche{
+	font-size: 50px;color: #808080;
 }
